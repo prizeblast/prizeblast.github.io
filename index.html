@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prize Blast – Échange de pièces</title>
+  <style>
+    body {
+      background: #fef6e4;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      color: #f95738;
+      text-align: center;
+    }
+    .box {
+      background: #fff3cd;
+      border: 3px dashed #f8c102;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #32c57c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏴‍☠️ Prize Blast – Échange de pièces 🧩</h1>
+  <div class="box">
+    <label>Pseudo :</label>
+    <input type="text" placeholder="Ton pseudo dans le jeu" />
+    
+    <label>Lien de profil :</label>
+    <input type="text" placeholder="Copie ton lien dans Prize Blast" />
+
+    <label>Photo de profil (URL) :</label>
+    <input type="text" placeholder="Lien vers ta photo (facultatif)" />
+
+    <label>Pièces en double (séparées par des virgules) :</label>
+    <textarea placeholder="Ex : 12, 45, 67"></textarea>
+
+    <label>Pièces recherchées (séparées par des virgules) :</label>
+    <textarea placeholder="Ex : 15, 22, 99"></textarea>
+
+    <button>🔍 Trouver des échanges possibles</button>
+  </div>
+</body>
+</html>
