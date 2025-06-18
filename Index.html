@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prize Blast – L’application incontournable</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: linear-gradient(to bottom, #fbeec1, #f8d08a);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #ff9f1c;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 20px;
+    }
+    input, button, select {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+    .photo-preview {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #ff9f1c;
+    }
+    .section {
+      margin-top: 20px;
+    }
+    .pieces {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .piece {
+      width: 40px;
+      height: 40px;
+      background-color: #e0f7fa;
+      border: 1px solid #ccc;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .selected {
+      background-color: #ffd166;
+    }
+    .category-title {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #118ab2;
+    }
+  </style>
+</head>
+<body>
+  <header>🏴‍☠️ Prize Blast – Mon Profil 🧩</header>
+  <div class="container">
+    <label>Pseudo :</label>
+    <input type="text" id="pseudo" placeholder="Ton pseudo pirate"/>
+
+    <label>Lien dans le jeu :</label>
+    <input type="text" id="lien" placeholder="ex : https://prizeblast.com/joueur"/>
+
+    <label>Photo de profil :</label>
+    <input type="file" id="photo" accept="image/*" onchange="previewPhoto(event)">
+    <br/>
+    <img id="photoPreview" class="photo-preview" style="display:none;" />
+
+    <div class="section">
+      <div class="category-title">🧩 Pirates Débutants (1 à 252)</div>
+      <div class="pieces" id="debutants"></div>
+
+      <div class="category-title">💎 Pirates VIP (253 à 504)</div>
+      <div class="pieces" id="vip"></div>
+
+      <div class="category-title">🐷 Pirates VIPig (505 à 828)</div>
+      <div class="pieces" id="vipig"></div>
+
+      <div class="category-title">🔮 Pirates Mystiques (829 à 972)</div>
+      <div class="pieces" id="mystiques"></div>
+    </div>
+  </div>
+
+  <script>
+    function createPieces(start, end, containerId) {
+      const container = document.getElementById(containerId);
+      for (let i = start; i <= end; i++) {
+        const piece = document.createElement("div");
+        piece.className = "piece";
+        piece.innerText = i;
+        piece.onclick = () => piece.classList.toggle("selected");
+        container.appendChild(piece);
+      }
+    }
+
+    createPieces(1, 252, "debutants");
+    createPieces(253, 504, "vip");
+    createPieces(505, 828, "vipig");
+    createPieces(829, 972, "mystiques");
+
+    function previewPhoto(event) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const output = document.getElementById('photoPreview');
+        output.src = reader.result;
+        output.style.display = "block";
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  </script>
+</body>
+</html>
