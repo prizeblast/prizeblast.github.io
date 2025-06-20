@@ -126,3 +126,69 @@
   <button onclick="show('echanges')">🔄<br>Échanges</button>
   <button onclick="show('demandes')">📥<br>Demandes</button>
 </nav>
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function previewPhoto(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const img = document.createElement("img");
+      img.src = reader.result;
+      img.style.maxWidth = "120px";
+      img.style.marginTop = "10px";
+      document.getElementById("photoPreview").innerHTML = "";
+      document.getElementById("photoPreview").appendChild(img);
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  function playMusic() {
+    const audio = document.getElementById("pirateMusic");
+    audio.volume = 0.4;
+    audio.play().catch(() => {
+      // Pour Safari/iPhone qui bloque parfois l'autoplay
+    });
+  }
+
+  function createGrid(containerId, prefix) {
+    const container = document.getElementById(containerId);
+    const categories = [
+      { label: "🏴 Pirates Débutants", start: 1, end: 252 },
+      { label: "👑 Pirates VIP", start: 253, end: 504 },
+      { label: "🐷 Pirates VIPig", start: 505, end: 828 },
+      { label: "🔮 Pirates Mystiques", start: 829, end: 972 },
+    ];
+
+    categories.forEach(cat => {
+      const title = document.createElement('h3');
+      title.textContent = cat.label;
+      container.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+
+      for (let i = cat.start; i <= cat.end; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'piece';
+        cell.textContent = i;
+        cell.id = prefix + i;
+
+        cell.addEventListener('click', () => {
+          cell.classList.toggle('checked');
+        });
+
+        grid.appendChild(cell);
+      }
+      container.appendChild(grid);
+    });
+  }
+
+  createGrid("gridDoubles", "D");
+  createGrid("gridRecherches", "R");
+</script>
+
+</body>
+</html>
