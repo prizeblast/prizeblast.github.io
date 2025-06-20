@@ -1,126 +1,128 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Prize Blast – L’application incontournable</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      background: linear-gradient(to bottom, #fbeec1, #f8d08a);
+      font-family: 'Fredoka', sans-serif;
+      background: #f3faff url('https://i.imgur.com/C0yRpWc.png') repeat;
+      color: #333;
       margin: 0;
       padding: 0;
-      color: #333;
     }
     header {
-      background-color: #ff9f1c;
-      padding: 20px;
+      background: #FFCC00;
+      padding: 15px;
       text-align: center;
-      color: white;
       font-size: 24px;
-      font-weight: bold;
+      color: #000;
     }
-    .container {
-      padding: 20px;
-    }
-    input, button, select {
-      padding: 10px;
-      margin: 5px 0;
+    nav {
+      position: fixed;
+      bottom: 0;
       width: 100%;
-      font-size: 16px;
+      background: #ffc107;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 2px solid #000;
     }
-    .photo-preview {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 2px solid #ff9f1c;
+    nav button {
+      background: none;
+      border: none;
+      font-size: 14px;
+      color: #000;
     }
     .section {
-      margin-top: 20px;
+      display: none;
+      padding: 20px;
     }
-    .pieces {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
+    .active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input[type="text"], input[type="url"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin: 10px 0;
     }
     .piece {
-      width: 40px;
-      height: 40px;
-      background-color: #e0f7fa;
       border: 1px solid #ccc;
+      padding: 6px;
+      background: #fff;
       text-align: center;
-      line-height: 40px;
-      border-radius: 6px;
+      font-size: 12px;
       cursor: pointer;
-      font-weight: bold;
     }
-    .selected {
-      background-color: #ffd166;
+    .checked {
+      background: #90ee90;
     }
-    .category-title {
+    h2 {
       margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #118ab2;
     }
   </style>
 </head>
-<body>
-  <header>🏴‍☠️ Prize Blast – Mon Profil 🧩</header>
-  <div class="container">
-    <label>Pseudo :</label>
-    <input type="text" id="pseudo" placeholder="Ton pseudo pirate"/>
+<body onload="playMusic()">
 
-    <label>Lien dans le jeu :</label>
-    <input type="text" id="lien" placeholder="ex : https://prizeblast.com/joueur"/>
+<header>🏴‍☠️ Prize Blast – Mon Profil Pirate</header>
 
-    <label>Photo de profil :</label>
-    <input type="file" id="photo" accept="image/*" onchange="previewPhoto(event)">
-    <br/>
-    <img id="photoPreview" class="photo-preview" style="display:none;" />
+<audio id="pirateMusic" autoplay loop>
+  <source src="https://cdn.pixabay.com/audio/2023/03/23/audio_685c76f009.mp3" type="audio/mpeg">
+</audio>
 
-    <div class="section">
-      <div class="category-title">🧩 Pirates Débutants (1 à 252)</div>
-      <div class="pieces" id="debutants"></div>
+<div id="profil" class="section active">
+  <label>Pseudo :</label>
+  <input type="text" id="pseudo">
 
-      <div class="category-title">💎 Pirates VIP (253 à 504)</div>
-      <div class="pieces" id="vip"></div>
+  <label>Lien de jeu :</label>
+  <input type="url" id="lien">
 
-      <div class="category-title">🐷 Pirates VIPig (505 à 828)</div>
-      <div class="pieces" id="vipig"></div>
+  <label>Photo de profil :</label>
+  <input type="file" accept="image/*" onchange="previewPhoto(event)">
+  <div id="photoPreview"></div>
+</div>
 
-      <div class="category-title">🔮 Pirates Mystiques (829 à 972)</div>
-      <div class="pieces" id="mystiques"></div>
-    </div>
-  </div>
+<div id="doubles" class="section">
+  <h2>Mes pièces en double</h2>
+  <div id="gridDoubles"></div>
+</div>
 
-  <script>
-    function createPieces(start, end, containerId) {
-      const container = document.getElementById(containerId);
-      for (let i = start; i <= end; i++) {
-        const piece = document.createElement("div");
-        piece.className = "piece";
-        piece.innerText = i;
-        piece.onclick = () => piece.classList.toggle("selected");
-        container.appendChild(piece);
-      }
-    }
+<div id="recherches" class="section">
+  <h2>Mes pièces recherchées</h2>
+  <div id="gridRecherches"></div>
+</div>
 
-    createPieces(1, 252, "debutants");
-    createPieces(253, 504, "vip");
-    createPieces(505, 828, "vipig");
-    createPieces(829, 972, "mystiques");
+<div id="echanges" class="section">
+  <h2>Échanges possibles</h2>
+  <p>(Fonctionnalité à venir)</p>
+</div>
 
-    function previewPhoto(event) {
-      const reader = new FileReader();
-      reader.onload = function() {
-        const output = document.getElementById('photoPreview');
-        output.src = reader.result;
-        output.style.display = "block";
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  </script>
-</body>
-</html>
+<div id="demandes" class="section">
+  <h2>Mes pièces recherchées par les autres</h2>
+  <p>(Fonctionnalité à venir)</p>
+</div>
+
+<nav>
+  <button onclick="show('profil')">👤<br>Profil</button>
+  <button onclick="show('doubles')">💰<br>Doubles</button>
+  <button onclick="show('recherches')">🔍<br>Recherches</button>
+  <button onclick="show('echanges')">🔄<br>Échanges</button>
+  <button onclick="show('demandes')">📥<br>Demandes</button>
+</nav>
