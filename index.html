@@ -1,137 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Prize Blast – Mon Profil Pirate</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta charset="UTF-8">
+  <title>Prize Blast – Accueil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Fredoka', sans-serif;
-      background: #fff8dc;
       margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ffc107;
-      color: #000;
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .section {
-      padding: 1rem;
-    }
-    h2 {
-      margin-top: 2rem;
-      color: #007b8a;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-      gap: 5px;
-      margin-bottom: 2rem;
-    }
-    .grid button {
-      background-color: #e0f7fa;
-      border: none;
-      border-radius: 8px;
-      padding: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .grid button.active {
-      background-color: #ff8a65;
-      color: white;
-    }
-    label, input, .upload {
-      display: block;
-      margin: 10px 0;
-      font-size: 1rem;
-    }
-    input[type="file"] {
       font-family: 'Fredoka', sans-serif;
-    }
-    .nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
+      background: linear-gradient(to bottom, #fff3c4, #ffe);
       display: flex;
-      justify-content: space-around;
-      background: #ffc107;
-      padding: 0.5rem 0;
-      border-top: 1px solid #000;
-    }
-    .nav div {
-      text-align: center;
-      font-size: 0.8rem;
-    }
-    .nav img {
-      width: 24px;
-      height: 24px;
-    }
-    .section-title {
-      display: flex;
+      flex-direction: column;
       align-items: center;
-      font-weight: bold;
-      font-size: 1.2rem;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
     }
-    .section-title img {
-      width: 24px;
-      margin-right: 0.5rem;
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    #flag {
+      width: 150px;
+      animation: wave 2s infinite ease-in-out;
+    }
+    @keyframes wave {
+      0% { transform: rotate(0deg) translateY(0); }
+      50% { transform: rotate(2deg) translateY(-5px); }
+      100% { transform: rotate(0deg) translateY(0); }
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      background-color: #ff9800;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      margin-top: 30px;
     }
   </style>
 </head>
-<body>
-  <header>🏴‍☠️ Prize Blast – Mon Profil Pirate</header>
+<body onload="playMusic()">
+  <img id="flag" src="https://i.imgur.com/KlL0Myy.png" alt="Drapeau pirate">
+  <h1>Bienvenue dans Prize Blast !</h1>
+  <p>Échange tes pièces de puzzle comme un vrai pirate !</p>
+  <button onclick="window.location.href='app.html'">Inscription</button>
 
-  <div class="section">
-    <label>Pseudo :</label>
-    <input type="text" placeholder="Ton pseudo pirate" />
-
-    <label>Lien dans le jeu :</label>
-    <input type="text" placeholder="ex : https://prizeblast.com/joueur" />
-
-    <label>Photo de profil :</label>
-    <input type="file" accept="image/*" />
-  </div>
-
-  <div class="section">
-    <h2 class="section-title"><img src="https://i.imgur.com/kNB8Cdk.png" alt="puzzle" />Pièces en double</h2>
-    <div class="grid" id="doubles"></div>
-
-    <h2 class="section-title"><img src="https://i.imgur.com/kNB8Cdk.png" alt="puzzle" />Pièces recherchées</h2>
-    <div class="grid" id="recherches"></div>
-  </div>
-
-  <div class="nav">
-    <div><img src="https://i.imgur.com/RwZbqzO.png" alt="profil"/><br>Profil</div>
-    <div><img src="https://i.imgur.com/NxZ3VtD.png" alt="doubles"/><br>Doubles</div>
-    <div><img src="https://i.imgur.com/b5A0Vlf.png" alt="recherches"/><br>Recherches</div>
-    <div><img src="https://i.imgur.com/oaZGb1T.png" alt="echanges"/><br>Échanges</div>
-    <div><img src="https://i.imgur.com/V3ZyTeq.png" alt="demandes"/><br>Demandes</div>
-  </div>
+  <audio id="pirateMusic" autoplay>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_194d511a74.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
-    const TOTAL_PIECES = 972;
-    const containerDoubles = document.getElementById('doubles');
-    const containerRecherches = document.getElementById('recherches');
-
-    function createButtons(container, prefix) {
-      for (let i = 1; i <= TOTAL_PIECES; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.addEventListener("click", () => {
-          btn.classList.toggle("active");
-        });
-        container.appendChild(btn);
-      }
+    function playMusic() {
+      const music = document.getElementById("pirateMusic");
+      music.volume = 0.4;
     }
-
-    createButtons(containerDoubles, 'd');
-    createButtons(containerRecherches, 'r');
   </script>
 </body>
 </html>
