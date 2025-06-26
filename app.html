@@ -3,169 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Prize Blast – Appli Pirate</title>
+  <title>Prize Blast – L'application incontournable</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Fredoka', sans-serif;
-      background-color: #fff3cc;
-      margin: 0;
-      padding-bottom: 60px;
-      color: #222;
-    }
-    header {
-      background-color: #ffbb00;
-      padding: 10px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .container {
-      padding: 20px;
-    }
-    input, label {
-      display: block;
-      margin: 10px 0;
-    }
-    .section {
-      margin-top: 20px;
-    }
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-    .piece {
-      width: 40px;
-      height: 40px;
-      background-color: #dff6ff;
-      text-align: center;
-      line-height: 40px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .piece.selected {
-      background-color: #ffcccb;
-    }
-    nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #ffbb00;
-      display: flex;
-      justify-content: space-around;
-      font-size: 12px;
-      padding: 5px 0;
-    }
-    nav div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-    .page {
-      display: none;
-    }
-    .page.active {
-      display: block;
-    }
-  </style>
 </head>
 <body>
-  <header>🏴‍☠️ Prize Blast</header>
-  <div class="container">
-    <div id="page-profil" class="page active">
-      <label>Pseudo : <input type="text" placeholder="Ton pseudo pirate"></label>
-      <label>Lien dans le jeu : <input type="text" placeholder="ex : https://prizeblast.com/joueur"></label>
-      <label>Photo de profil : <input type="file"></label>
-    </div>
+  <audio id="pirateMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/14/audio_45d8b68b17.mp3" type="audio/mp3">
+  </audio>
 
-    <div id="page-doubles" class="page">
-      <h3>🧩 Pièces en double</h3>
-      <div class="section">
-        <h4>Pirates Débutants (1 à 252)</h4>
-        <div class="grid" id="doubles1"></div>
-      </div>
-      <div class="section">
-        <h4>Pirates VIP (253 à 504)</h4>
-        <div class="grid" id="doubles2"></div>
-      </div>
-      <div class="section">
-        <h4>Pirates VIPig (505 à 828)</h4>
-        <div class="grid" id="doubles3"></div>
-      </div>
-      <div class="section">
-        <h4>Pirates Mystiques (829 à 972)</h4>
-        <div class="grid" id="doubles4"></div>
-      </div>
-    </div>
-
-    <div id="page-recherches" class="page">
-      <h3>🔎 Pièces recherchées</h3>
-      <div class="section">
-        <h4>Pirates Débutants (1 à 252)</h4>
-        <div class="grid" id="recherche1"></div>
-      </div>
-      <div class="section">
-        <h4>Pirates VIP (253 à 504)</h4>
-        <div class="grid" id="recherche2"></div>
-      </div>
-      <div class="section">
-        <h4>Pirates VIPig (505 à 828)</h4>
-        <div class="grid" id="recherche3"></div>
-      </div>
-      <div class="section">
-        <h4>Pirates Mystiques (829 à 972)</h4>
-        <div class="grid" id="recherche4"></div>
-      </div>
-    </div>
-
-    <div id="page-echanges" class="page">
-      <h3>🤝 Échanges possibles</h3>
-      <p>À venir...</p>
-    </div>
-
-    <div id="page-demandes" class="page">
-      <h3>📥 Mes pièces recherchées par les autres</h3>
-      <p>À venir...</p>
-    </div>
+  <div id="accueil">
+    <img id="flag" src="https://cdn-icons-png.flaticon.com/512/2983/2983879.png" alt="Drapeau pirate" width="150">
+    <h1>🏴‍☠️ Prize Blast 🧩</h1>
+    <p>L'appli pour échanger tes pièces de puzzle !</p>
+    <button onclick="goToApp()">S'inscrire / Accéder à l'appli</button>
   </div>
 
-  <nav>
-    <div onclick="switchPage('profil')">🧑‍✈️<span>Profil</span></div>
-    <div onclick="switchPage('doubles')">🧩<span>Doubles</span></div>
-    <div onclick="switchPage('recherches')">🔎<span>Recherches</span></div>
-    <div onclick="switchPage('echanges')">🤝<span>Échanges</span></div>
-    <div onclick="switchPage('demandes')">📥<span>Demandes</span></div>
-  </nav>
+  <div id="app" style="display:none;">
+    <nav>
+      <button onclick="showTab('profil')">👤 Mon profil</button>
+      <button onclick="showTab('doubles')">🧩 Mes doubles</button>
+      <button onclick="showTab('recherches')">🔍 Mes recherches</button>
+      <button onclick="showTab('echanges')">🤝 Échanges possibles</button>
+      <button onclick="showTab('demandes')">📨 Recherchées par d'autres</button>
+    </nav>
 
-  <script>
-    function switchPage(name) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + name).classList.add('active');
-    }
+    <section id="profil" class="tab">
+      <h2>👤 Mon profil</h2>
+      <input type="text" placeholder="Ton pseudo" id="pseudo">
+      <input type="text" placeholder="Ton lien Prize Blast" id="lien">
+      <input type="file" accept="image/*" id="photoUpload">
+      <div><img id="photoPreview" style="width: 150px; height: 150px; object-fit: cover;" /></div>
+      <button onclick="saveProfile()">Enregistrer mon profil</button>
+    </section>
 
-    function generatePieces(start, end, containerId) {
-      const container = document.getElementById(containerId);
-      for (let i = start; i <= end; i++) {
-        const el = document.createElement('div');
-        el.className = 'piece';
-        el.textContent = i;
-        el.onclick = () => el.classList.toggle('selected');
-        container.appendChild(el);
-      }
-    }
+    <section id="doubles" class="tab" style="display:none;">
+      <h2>🧩 Mes pièces en double</h2>
+      <div id="doublesGrid"></div>
+      <button onclick="saveDoubles()">Enregistrer mes pièces</button>
+    </section>
 
-    generatePieces(1, 252, 'doubles1');
-    generatePieces(253, 504, 'doubles2');
-    generatePieces(505, 828, 'doubles3');
-    generatePieces(829, 972, 'doubles4');
+    <section id="recherches" class="tab" style="display:none;">
+      <h2>🔍 Mes pièces recherchées</h2>
+      <div id="recherchesGrid"></div>
+      <button onclick="saveRecherches()">Enregistrer mes pièces</button>
+    </section>
 
-    generatePieces(1, 252, 'recherche1');
-    generatePieces(253, 504, 'recherche2');
-    generatePieces(505, 828, 'recherche3');
-    generatePieces(829, 972, 'recherche4');
-  </script>
+    <section id="echanges" class="tab" style="display:none;">
+      <h2>🤝 Échanges possibles</h2>
+      <ul id="echangesList"></ul>
+    </section>
+
+    <section id="demandes" class="tab" style="display:none;">
+      <h2>📨 Mes pièces recherchées par d'autres</h2>
+      <ul id="demandesList"></ul>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
