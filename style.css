@@ -1,103 +1,76 @@
 body {
   font-family: 'Fredoka', sans-serif;
-  background-color: #ffeaa7;
+  background-color: #fff8e1;
   margin: 0;
   padding: 0;
   text-align: center;
-  color: #2d3436;
+  color: #333;
 }
 
-#accueil {
-  padding: 40px 20px;
-}
-
-#accueil img#flag {
-  animation: wave 2s infinite;
-}
-
-@keyframes wave {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(-5deg); }
-  100% { transform: rotate(0deg); }
+h1, h2 {
+  color: #b22222;
 }
 
 button {
-  background-color: #0984e3;
-  color: white;
+  background-color: #ffcc00;
   border: none;
-  padding: 12px 20px;
+  padding: 10px 20px;
   margin: 10px;
-  border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 button:hover {
-  background-color: #74b9ff;
+  background-color: #ffa500;
 }
 
 nav {
-  background-color: #dff9fb;
+  background-color: #ffe4b5;
   padding: 10px;
   display: flex;
-  justify-content: space-around;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-nav button {
-  flex: 1 1 30%;
+input {
+  padding: 8px;
   margin: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-section.tab {
-  padding: 20px;
-}
-
-input[type="text"], input[type="file"] {
+.tab {
   padding: 10px;
-  margin: 10px;
+}
+
+#flag {
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background-color: #f0f8ff;
+  margin: 5px auto;
+  padding: 10px;
+  border-radius: 8px;
   width: 90%;
   max-width: 400px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
 }
 
-#photoPreview {
+img {
+  border-radius: 10px;
   margin-top: 10px;
-  border-radius: 10px;
-  border: 2px solid #636e72;
-}
-
-.grid-section {
-  margin-bottom: 30px;
-}
-
-.grid-section h3 {
-  background-color: #fdcb6e;
-  padding: 8px;
-  border-radius: 8px;
-  color: #2d3436;
-}
-
-.piece {
-  display: inline-block;
-  margin: 5px;
-  padding: 10px;
-  background-color: #fab1a0;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.piece:hover {
-  transform: scale(1.1);
-}
-
-.piece.checked {
-  background-color: #00cec9;
-  border: 2px solid #0984e3;
-  color: white;
 }
