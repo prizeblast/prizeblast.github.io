@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Musique pirate -->
   <audio id="pirateMusic" autoplay loop>
     <source src="https://cdn.pixabay.com/audio/2022/03/14/audio_45d8b68b17.mp3" type="audio/mp3">
   </audio>
@@ -19,75 +18,67 @@
     <img id="flag" src="https://cdn-icons-png.flaticon.com/512/2983/2983879.png" alt="Drapeau pirate" width="150">
     <h1>🏴‍☠️ Prize Blast 🧩</h1>
     <p>L'appli pour échanger tes pièces de puzzle !</p>
-    <button onclick="goToApp()">S'inscrire / Accéder à l'appli</button>
+    <button onclick="showProfileCreation()">Créer un profil</button>
+    <button onclick="showLogin()">Se connecter</button>
   </div>
 
   <!-- Connexion -->
   <div id="login" style="display:none;">
     <h2>🔐 Connexion</h2>
     <input type="text" placeholder="Ton pseudo" id="loginPseudo">
-    <input type="password" placeholder="Code à 4 chiffres" id="loginCode">
-    <br>
+    <input type="password" placeholder="Code à 4 chiffres" id="loginCode" maxlength="4">
     <button onclick="login()">Se connecter</button>
   </div>
 
   <!-- Application -->
   <div id="app" style="display:none;">
-    <!-- Navigation -->
     <nav>
       <button onclick="showTab('profil')">👤 Mon profil</button>
       <button onclick="showTab('doubles')">🧩 Mes doubles</button>
       <button onclick="showTab('recherches')">🔍 Mes recherches</button>
       <button onclick="showTab('echanges')">🤝 Échanges possibles</button>
       <button onclick="showTab('demandes')">📨 Recherchées par d'autres</button>
-      <button onclick="showTab('autres')">📦 Pièces possédées par les autres</button>
+      <button onclick="showTab('autres')">🧭 Pièces des autres</button>
     </nav>
 
-    <!-- Profil -->
     <section id="profil" class="tab">
       <h2>👤 Mon profil</h2>
-      <input type="text" placeholder="Ton pseudo" id="pseudo"><br>
-      <input type="text" placeholder="Ton lien Prize Blast" id="lien"><br>
-      <input type="password" placeholder="Code de connexion à 4 chiffres" id="codeConnexion"><br>
+      <input type="text" placeholder="Ton pseudo" id="pseudo">
+      <input type="text" placeholder="Ton lien Prize Blast" id="lien">
+      <input type="password" placeholder="Code à 4 chiffres" id="codeConnexion" maxlength="4">
       <input type="file" accept="image/*" id="photoUpload">
-      <div><img id="photoPreview" style="width: 150px; height: 150px; object-fit: cover; margin-top: 10px;" /></div>
-      <button onclick="saveProfile()">💾 Enregistrer mon profil</button>
+      <div><img id="photoPreview" style="width: 150px; height: 150px; object-fit: cover;" /></div>
+      <button onclick="saveProfile()">Enregistrer mon profil</button>
     </section>
 
-    <!-- Doubles -->
     <section id="doubles" class="tab" style="display:none;">
       <h2>🧩 Mes pièces en double</h2>
       <div id="doublesGrid"></div>
-      <button onclick="saveDoubles()">💾 Enregistrer mes pièces</button>
+      <button onclick="saveDoubles()">Enregistrer mes pièces</button>
     </section>
 
-    <!-- Recherches -->
     <section id="recherches" class="tab" style="display:none;">
       <h2>🔍 Mes pièces recherchées</h2>
       <div id="recherchesGrid"></div>
-      <button onclick="saveRecherches()">💾 Enregistrer mes pièces</button>
+      <button onclick="saveRecherches()">Enregistrer mes pièces</button>
     </section>
 
-    <!-- Échanges -->
     <section id="echanges" class="tab" style="display:none;">
       <h2>🤝 Échanges possibles</h2>
       <ul id="echangesList"></ul>
     </section>
 
-    <!-- Demandées par les autres -->
     <section id="demandes" class="tab" style="display:none;">
-      <h2>📨 Pièces que les autres veulent</h2>
+      <h2>📨 Mes pièces recherchées par d'autres</h2>
       <ul id="demandesList"></ul>
     </section>
 
-    <!-- Autres joueurs -->
     <section id="autres" class="tab" style="display:none;">
-      <h2>📦 Pièces possédées par les autres</h2>
+      <h2>🧭 Pièces possédées par les autres</h2>
       <ul id="autresList"></ul>
     </section>
   </div>
 
-  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
