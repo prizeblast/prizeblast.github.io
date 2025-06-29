@@ -1,90 +1,147 @@
-// Navigation entre les onglets
-function showTab(id) {
-  document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
+let currentUser = null;
+let db = {};
 
-// Accès à l'app depuis l'accueil
 function goToApp() {
   document.getElementById('accueil').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  document.getElementById('login').style.display = 'block';
 }
 
-// Prévisualisation photo
-document.getElementById('photoUpload').addEventListener('change', e => {
-  const reader = new FileReader();
-  reader.onload = () => document.getElementById('photoPreview').src = reader.result;
-  reader.readAsDataURL(e.target.files[0]);
-});
-
-// Génération des grilles
-function createGrid(containerId, type) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-  const sections = [
-    { name: 'Pirates débutants', start: 1, end: 252 },
-    { name: 'Pirates VIP', start: 253, end: 504 },
-    { name: 'Pirates VIPig', start: 505, end: 828 },
-    { name: 'Pirates mystiques', start: 829, end: 972 }
-  ];
-  const selections = JSON.parse(localStorage.getItem(type) || '[]');
-
-  sections.forEach(section => {
-    const div = document.createElement('div');
-    div.className = 'grid-section';
-    const title = document.createElement('h3');
-    title.textContent = section.name;
-    div.appendChild(title);
-
-    for (let i = section.start; i <= section.end; i++) {
-      const span = document.createElement('span');
-      span.className = 'piece';
-      span.textContent = i;
-      if (selections.includes(i)) span.classList.add('checked');
-      span.onclick = () => {
-        span.classList.toggle('checked');
-      };
-      div.appendChild(span);
-    }
-
-    container.appendChild(div);
-  });
-}
-
-// Enregistrement local
-function saveDoubles() {
-  const selected = [...document.querySelectorAll('#doublesGrid .piece.checked')].map(el => parseInt(el.textContent));
-  localStorage.setItem('doubles', JSON.stringify(selected));
-  alert('✅ Pièces en double enregistrées !');
-}
-
-function saveRecherches() {
-  const selected = [...document.querySelectorAll('#recherchesGrid .piece.checked')].map(el => parseInt(el.textContent));
-  localStorage.setItem('recherches', JSON.stringify(selected));
-  alert('✅ Pièces recherchées enregistrées !');
+function showTab(tabId) {
+  document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
+  document.getElementById(tabId).style.display = 'block';
+  if (tabId === 'echanges') afficherEchanges();
+  if (tabId === 'demandes') afficherDemandes();
+  if (tabId === 'autres') afficherAutres();
 }
 
 function saveProfile() {
-  const pseudo = document.getElementById('pseudo').value;
-  const lien = document.getElementById('lien').value;
-  const photo = document.getElementById('photoPreview').src;
-  localStorage.setItem('profil', JSON.stringify({ pseudo, lien, photo }));
-  alert('✅ Profil enregistré !');
+  const pseudo = document.getElementById("pseudo").value;
+  const lien = document.getElementById("lien").value;
+  const code = document.getElementById("codeConnexion").value;
+  const photo = document.getElementById("photoUpload").files[0];
+
+  if (!pseudo || !code) return alert("Pseudo et code requis");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const photoURL = reader.result;
+    db[pseudo] = {
+      pseudo, lien, code, photoURL,
+      doubles: [], recherches: []
+    };
+    currentUser = pseudo;
+    localStorage.setItem("prizeblastDB", JSON.stringify(db));
+    alert("Profil enregistré !");
+    afficherGrilles();
+  };
+  if (photo) reader.readAsDataURL(photo);
+  else {
+    db[pseudo] = { pseudo, lien, code, photoURL: "", doubles: [], recherches: [] };
+    currentUser = pseudo;
+    localStorage.setItem("prizeblastDB", JSON.stringify(db));
+    alert("Profil enregistré !");
+    afficherGrilles();
+  }
 }
 
-// Chargement au démarrage
-window.onload = () => {
-  // Musique
-  const music = document.getElementById('pirateMusic');
-  music.volume = 0.2;
+function login() {
+  const pseudo = document.getElementById("loginPseudo").value;
+  const code = document.getElementById("loginCode").value;
+  const data = JSON.parse(localStorage.getItem("prizeblastDB")) || {};
+  db = data;
+  if (data[pseudo] && data[pseudo].code === code) {
+    currentUser = pseudo;
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    document.getElementById("pseudo").value = data[pseudo].pseudo;
+    document.getElementById("lien").value = data[pseudo].lien;
+    if (data[pseudo].photoURL) {
+      document.getElementById("photoPreview").src = data[pseudo].photoURL;
+    }
+    afficherGrilles();
+  } else {
+    alert("Pseudo ou code incorrect");
+  }
+}
 
-  // Grilles
-  createGrid('doublesGrid', 'doubles');
-  createGrid('recherchesGrid', 'recherches');
+function afficherGrilles() {
+  afficherGrille("doublesGrid", "doubles");
+  afficherGrille("recherchesGrid", "recherches");
+}
 
-  // Profil
-  const profil = JSON.parse(localStorage.getItem('profil') || '{}');
-  if (profil.pseudo) document.getElementById('pseudo').value = profil.pseudo;
-  if (profil.lien) document.getElementById('lien').value = profil.lien;
-  if (profil.photo) document.getElementById('photoPreview').src = profil.photo;
-};
+function afficherGrille(containerId, type) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  const joueur = db[currentUser];
+  const data = joueur[type] || [];
+  for (let i = 1; i <= 972; i++) {
+    const el = document.createElement("div");
+    el.className = "piece";
+    el.textContent = i;
+    if (data.includes(i)) el.classList.add("checked");
+    el.onclick = () => {
+      if (el.classList.contains("checked")) {
+        el.classList.remove("checked");
+        joueur[type] = joueur[type].filter(n => n !== i);
+      } else {
+        el.classList.add("checked");
+        joueur[type].push(i);
+      }
+    };
+    container.appendChild(el);
+  }
+}
+
+function saveDoubles() {
+  localStorage.setItem("prizeblastDB", JSON.stringify(db));
+  alert("Doubles enregistrés !");
+}
+
+function saveRecherches() {
+  localStorage.setItem("prizeblastDB", JSON.stringify(db));
+  alert("Recherches enregistrées !");
+}
+
+function afficherEchanges() {
+  const joueur = db[currentUser];
+  const echanges = [];
+  for (const pseudo in db) {
+    if (pseudo !== currentUser) {
+      const autre = db[pseudo];
+      const possibles = autre.doubles.filter(p => joueur.recherches.includes(p));
+      if (possibles.length) {
+        echanges.push(`${pseudo} peut te donner : ${possibles.join(", ")}`);
+      }
+    }
+  }
+  document.getElementById("echangesList").innerHTML = echanges.map(e => `<li>${e}</li>`).join("");
+}
+
+function afficherDemandes() {
+  const joueur = db[currentUser];
+  const demandes = [];
+  for (const pseudo in db) {
+    if (pseudo !== currentUser) {
+      const autre = db[pseudo];
+      const pieces = joueur.doubles.filter(p => autre.recherches.includes(p));
+      if (pieces.length) {
+        demandes.push(`${pseudo} veut : ${pieces.join(", ")}`);
+      }
+    }
+  }
+  document.getElementById("demandesList").innerHTML = demandes.map(e => `<li>${e}</li>`).join("");
+}
+
+function afficherAutres() {
+  const joueur = db[currentUser];
+  const lignes = [];
+  for (const pseudo in db) {
+    if (pseudo !== currentUser) {
+      const autres = db[pseudo].doubles;
+      if (autres.length) {
+        lignes.push(`${pseudo} a : ${autres.join(", ")}`);
+      }
+    }
+  }
+  document.getElementById("autresList").innerHTML = lignes.map(e => `<li>${e}</li>`).join("");
+}
