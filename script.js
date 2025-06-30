@@ -1,147 +1,138 @@
-let currentUser = null;
-let db = {};
+import { saveProfile, loadProfile, loadAllProfiles } from './firebase.js';
 
-function goToApp() {
-  document.getElementById('accueil').style.display = 'none';
-  document.getElementById('login').style.display = 'block';
+let joueurActuel = null;
+let tousLesJoueurs = {};
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("formConnexion").addEventListener("submit", connexionJoueur);
+  document.getElementById("photoUpload").addEventListener("change", previewPhoto);
+  document.getElementById("btnEnregistrerProfil").addEventListener("click", enregistrerProfil);
+  document.getElementById("btnEnregistrerDoubles").addEventListener("click", enregistrerDoubles);
+  document.getElementById("btnEnregistrerRecherches").addEventListener("click", enregistrerRecherches);
+});
+
+function connexionJoueur(e) {
+  e.preventDefault();
+  const pseudo = document.getElementById("pseudoConnexion").value.trim();
+  const code = document.getElementById("codeConnexion").value.trim();
+
+  if (!pseudo || !code) return alert("Remplis les deux champs.");
+
+  loadProfile(pseudo).then(data => {
+    if (!data) return alert("Aucun joueur trouvé.");
+    if (data.code !== code) return alert("Code incorrect.");
+    joueurActuel = { pseudo, ...data };
+    demarrerApp();
+  });
+}
+
+function demarrerApp() {
+  document.getElementById("accueil").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  chargerTousLesJoueurs();
+
+  document.getElementById("pseudo").value = joueurActuel.pseudo;
+  document.getElementById("lien").value = joueurActuel.lien || "";
+  if (joueurActuel.photo) document.getElementById("photoPreview").src = joueurActuel.photo;
+  genererGrille("doublesGrid", joueurActuel.doubles || [], "doubles");
+  genererGrille("recherchesGrid", joueurActuel.recherches || [], "recherches");
+
+  showTab('profil');
+}
+
+function previewPhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById("photoPreview").src = e.target.result;
+    joueurActuel.photo = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function genererGrille(id, selection, type) {
+  const container = document.getElementById(id);
+  container.innerHTML = "";
+  const couleurs = ["#ffd166", "#ef476f", "#06d6a0", "#118ab2"];
+  const bornes = [1, 253, 505, 829, 973];
+  const noms = ["Pirates débutants", "Pirates VIP", "Pirates VIPig", "Pirates mystiques"];
+
+  for (let s = 0; s < 4; s++) {
+    const section = document.createElement("div");
+    section.innerHTML = `<h3>${noms[s]}</h3>`;
+    for (let i = bornes[s]; i < bornes[s + 1]; i++) {
+      const caseDiv = document.createElement("div");
+      caseDiv.className = "puzzlePiece";
+      caseDiv.textContent = i;
+      caseDiv.style.backgroundColor = selection.includes(i) ? couleurs[s] : "#ccc";
+      caseDiv.onclick = () => {
+        if (!selection.includes(i)) selection.push(i);
+        else selection.splice(selection.indexOf(i), 1);
+        genererGrille(id, selection, type);
+      };
+      section.appendChild(caseDiv);
+    }
+    container.appendChild(section);
+  }
+
+  joueurActuel[type] = selection;
+}
+
+function enregistrerProfil() {
+  joueurActuel.pseudo = document.getElementById("pseudo").value.trim();
+  joueurActuel.lien = document.getElementById("lien").value.trim();
+  if (!joueurActuel.code) joueurActuel.code = prompt("Choisis un code à 4 chiffres");
+  saveProfile(joueurActuel.pseudo, joueurActuel).then(() => alert("Profil enregistré !"));
+}
+
+function enregistrerDoubles() {
+  saveProfile(joueurActuel.pseudo, joueurActuel).then(() => alert("Doubles enregistrés !"));
+}
+
+function enregistrerRecherches() {
+  saveProfile(joueurActuel.pseudo, joueurActuel).then(() => alert("Recherches enregistrées !"));
 }
 
 function showTab(tabId) {
-  document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
-  document.getElementById(tabId).style.display = 'block';
-  if (tabId === 'echanges') afficherEchanges();
-  if (tabId === 'demandes') afficherDemandes();
-  if (tabId === 'autres') afficherAutres();
+  document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
+  document.getElementById(tabId).style.display = "block";
+
+  if (tabId === "echanges") afficherEchanges();
+  if (tabId === "demandes") afficherDemandes();
 }
 
-function saveProfile() {
-  const pseudo = document.getElementById("pseudo").value;
-  const lien = document.getElementById("lien").value;
-  const code = document.getElementById("codeConnexion").value;
-  const photo = document.getElementById("photoUpload").files[0];
-
-  if (!pseudo || !code) return alert("Pseudo et code requis");
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    const photoURL = reader.result;
-    db[pseudo] = {
-      pseudo, lien, code, photoURL,
-      doubles: [], recherches: []
-    };
-    currentUser = pseudo;
-    localStorage.setItem("prizeblastDB", JSON.stringify(db));
-    alert("Profil enregistré !");
-    afficherGrilles();
-  };
-  if (photo) reader.readAsDataURL(photo);
-  else {
-    db[pseudo] = { pseudo, lien, code, photoURL: "", doubles: [], recherches: [] };
-    currentUser = pseudo;
-    localStorage.setItem("prizeblastDB", JSON.stringify(db));
-    alert("Profil enregistré !");
-    afficherGrilles();
-  }
-}
-
-function login() {
-  const pseudo = document.getElementById("loginPseudo").value;
-  const code = document.getElementById("loginCode").value;
-  const data = JSON.parse(localStorage.getItem("prizeblastDB")) || {};
-  db = data;
-  if (data[pseudo] && data[pseudo].code === code) {
-    currentUser = pseudo;
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    document.getElementById("pseudo").value = data[pseudo].pseudo;
-    document.getElementById("lien").value = data[pseudo].lien;
-    if (data[pseudo].photoURL) {
-      document.getElementById("photoPreview").src = data[pseudo].photoURL;
-    }
-    afficherGrilles();
-  } else {
-    alert("Pseudo ou code incorrect");
-  }
-}
-
-function afficherGrilles() {
-  afficherGrille("doublesGrid", "doubles");
-  afficherGrille("recherchesGrid", "recherches");
-}
-
-function afficherGrille(containerId, type) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  const joueur = db[currentUser];
-  const data = joueur[type] || [];
-  for (let i = 1; i <= 972; i++) {
-    const el = document.createElement("div");
-    el.className = "piece";
-    el.textContent = i;
-    if (data.includes(i)) el.classList.add("checked");
-    el.onclick = () => {
-      if (el.classList.contains("checked")) {
-        el.classList.remove("checked");
-        joueur[type] = joueur[type].filter(n => n !== i);
-      } else {
-        el.classList.add("checked");
-        joueur[type].push(i);
-      }
-    };
-    container.appendChild(el);
-  }
-}
-
-function saveDoubles() {
-  localStorage.setItem("prizeblastDB", JSON.stringify(db));
-  alert("Doubles enregistrés !");
-}
-
-function saveRecherches() {
-  localStorage.setItem("prizeblastDB", JSON.stringify(db));
-  alert("Recherches enregistrées !");
+function chargerTousLesJoueurs() {
+  loadAllProfiles().then(data => {
+    tousLesJoueurs = data || {};
+  });
 }
 
 function afficherEchanges() {
-  const joueur = db[currentUser];
-  const echanges = [];
-  for (const pseudo in db) {
-    if (pseudo !== currentUser) {
-      const autre = db[pseudo];
-      const possibles = autre.doubles.filter(p => joueur.recherches.includes(p));
-      if (possibles.length) {
-        echanges.push(`${pseudo} peut te donner : ${possibles.join(", ")}`);
-      }
+  const ul = document.getElementById("echangesList");
+  ul.innerHTML = "";
+  for (const [autre, data] of Object.entries(tousLesJoueurs)) {
+    if (autre === joueurActuel.pseudo) continue;
+    const matchs = data.doubles?.filter(p => joueurActuel.recherches?.includes(p)) || [];
+    const retour = joueurActuel.doubles?.filter(p => data.recherches?.includes(p)) || [];
+    if (matchs.length && retour.length) {
+      const li = document.createElement("li");
+      li.innerHTML = `<b>${autre}</b> propose ${matchs.join(", ")} et cherche ${retour.join(", ")}`;
+      ul.appendChild(li);
     }
   }
-  document.getElementById("echangesList").innerHTML = echanges.map(e => `<li>${e}</li>`).join("");
 }
 
 function afficherDemandes() {
-  const joueur = db[currentUser];
-  const demandes = [];
-  for (const pseudo in db) {
-    if (pseudo !== currentUser) {
-      const autre = db[pseudo];
-      const pieces = joueur.doubles.filter(p => autre.recherches.includes(p));
-      if (pieces.length) {
-        demandes.push(`${pseudo} veut : ${pieces.join(", ")}`);
-      }
+  const ul = document.getElementById("demandesList");
+  ul.innerHTML = "";
+  for (const [autre, data] of Object.entries(tousLesJoueurs)) {
+    if (autre === joueurActuel.pseudo) continue;
+    const demandes = data.recherches?.filter(p => joueurActuel.doubles?.includes(p)) || [];
+    if (demandes.length) {
+      const li = document.createElement("li");
+      li.innerHTML = `<b>${autre}</b> cherche ${demandes.join(", ")}`;
+      ul.appendChild(li);
     }
   }
-  document.getElementById("demandesList").innerHTML = demandes.map(e => `<li>${e}</li>`).join("");
-}
-
-function afficherAutres() {
-  const joueur = db[currentUser];
-  const lignes = [];
-  for (const pseudo in db) {
-    if (pseudo !== currentUser) {
-      const autres = db[pseudo].doubles;
-      if (autres.length) {
-        lignes.push(`${pseudo} a : ${autres.join(", ")}`);
-      }
-    }
-  }
-  document.getElementById("autresList").innerHTML = lignes.map(e => `<li>${e}</li>`).join("");
 }
