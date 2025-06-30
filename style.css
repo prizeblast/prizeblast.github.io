@@ -1,10 +1,15 @@
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
 body {
   font-family: 'Fredoka', sans-serif;
-  background-color: #fff8e1;
-  margin: 0;
-  padding: 0;
+  background-color: #f0f8ff;
   text-align: center;
-  color: #333;
+  margin: 0;
+  padding: 10px;
 }
 
 h1, h2 {
@@ -14,63 +19,48 @@ h1, h2 {
 button {
   background-color: #ffcc00;
   border: none;
-  padding: 10px 20px;
-  margin: 10px;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 10px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 8px;
 }
 
 button:hover {
-  background-color: #ffa500;
+  background-color: #ffaa00;
 }
 
 nav {
-  background-color: #ffe4b5;
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
   margin-bottom: 20px;
 }
 
-input {
-  padding: 8px;
-  margin: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
 .tab {
+  display: none;
+}
+
+.puzzlePiece {
+  display: inline-block;
+  margin: 3px;
   padding: 10px;
-}
-
-#flag {
-  animation: float 2s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-ul li {
-  background-color: #f0f8ff;
-  margin: 5px auto;
-  padding: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
   border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
-img {
-  border-radius: 10px;
-  margin-top: 10px;
+.puzzlePiece.checked {
+  background-color: #32cd32;
+  color: white;
+  border-color: #228b22;
+}
+
+img#flag {
+  animation: float 2s ease-in-out infinite;
+  margin-bottom: 10px;
 }
