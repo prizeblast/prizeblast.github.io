@@ -4,33 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Prize Blast – L'application incontournable</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet" />
 </head>
 <body>
   <audio id="pirateMusic" autoplay loop>
     <source src="https://cdn.pixabay.com/audio/2022/03/14/audio_45d8b68b17.mp3" type="audio/mp3">
   </audio>
 
-  <!-- Page d'accueil -->
   <div id="accueil">
-    <img id="flag" src="https://cdn-icons-png.flaticon.com/512/2983/2983879.png" alt="Drapeau pirate" width="150">
+    <img id="flag" src="https://cdn-icons-png.flaticon.com/512/2983/2983879.png" alt="Drapeau pirate" width="150" style="animation: float 2s ease-in-out infinite;">
     <h1>🏴‍☠️ Prize Blast 🧩</h1>
     <p>L'appli pour échanger tes pièces de puzzle !</p>
-    <button onclick="showProfileCreation()">Créer un profil</button>
-    <button onclick="showLogin()">Se connecter</button>
+    <form id="formConnexion">
+      <input type="text" id="pseudoConnexion" placeholder="Ton pseudo" required><br>
+      <input type="password" id="codeConnexion" placeholder="Code à 4 chiffres" required><br>
+      <button type="submit">Se connecter</button>
+    </form>
   </div>
 
-  <!-- Connexion -->
-  <div id="login" style="display:none;">
-    <h2>🔐 Connexion</h2>
-    <input type="text" placeholder="Ton pseudo" id="loginPseudo">
-    <input type="password" placeholder="Code à 4 chiffres" id="loginCode" maxlength="4">
-    <button onclick="login()">Se connecter</button>
-  </div>
-
-  <!-- Application -->
   <div id="app" style="display:none;">
     <nav>
       <button onclick="showTab('profil')">👤 Mon profil</button>
@@ -38,29 +30,27 @@
       <button onclick="showTab('recherches')">🔍 Mes recherches</button>
       <button onclick="showTab('echanges')">🤝 Échanges possibles</button>
       <button onclick="showTab('demandes')">📨 Recherchées par d'autres</button>
-      <button onclick="showTab('autres')">🧭 Pièces des autres</button>
     </nav>
 
     <section id="profil" class="tab">
       <h2>👤 Mon profil</h2>
       <input type="text" placeholder="Ton pseudo" id="pseudo">
       <input type="text" placeholder="Ton lien Prize Blast" id="lien">
-      <input type="password" placeholder="Code à 4 chiffres" id="codeConnexion" maxlength="4">
       <input type="file" accept="image/*" id="photoUpload">
       <div><img id="photoPreview" style="width: 150px; height: 150px; object-fit: cover;" /></div>
-      <button onclick="saveProfile()">Enregistrer mon profil</button>
+      <button id="btnEnregistrerProfil">Enregistrer mon profil</button>
     </section>
 
     <section id="doubles" class="tab" style="display:none;">
       <h2>🧩 Mes pièces en double</h2>
       <div id="doublesGrid"></div>
-      <button onclick="saveDoubles()">Enregistrer mes pièces</button>
+      <button id="btnEnregistrerDoubles">Enregistrer mes pièces</button>
     </section>
 
     <section id="recherches" class="tab" style="display:none;">
       <h2>🔍 Mes pièces recherchées</h2>
       <div id="recherchesGrid"></div>
-      <button onclick="saveRecherches()">Enregistrer mes pièces</button>
+      <button id="btnEnregistrerRecherches">Enregistrer mes pièces</button>
     </section>
 
     <section id="echanges" class="tab" style="display:none;">
@@ -72,13 +62,8 @@
       <h2>📨 Mes pièces recherchées par d'autres</h2>
       <ul id="demandesList"></ul>
     </section>
-
-    <section id="autres" class="tab" style="display:none;">
-      <h2>🧭 Pièces possédées par les autres</h2>
-      <ul id="autresList"></ul>
-    </section>
   </div>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
