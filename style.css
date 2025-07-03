@@ -1,66 +1,67 @@
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
-}
-
 body {
   font-family: 'Fredoka', sans-serif;
-  background-color: #f0f8ff;
+  background: #fff8e7;
   text-align: center;
+  color: #333;
   margin: 0;
-  padding: 10px;
+  padding: 0;
 }
 
-h1, h2 {
-  color: #b22222;
-}
-
-button {
-  background-color: #ffcc00;
-  border: none;
-  padding: 10px 15px;
-  margin: 5px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #ffaa00;
+h1 {
+  font-size: 2.2em;
+  color: #d35400;
 }
 
 nav {
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-around;
+  background-color: #f9c74f;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+nav button {
+  background-color: #f9844a;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  font-size: 1em;
+  color: white;
+  cursor: pointer;
+}
+
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+  width: 80%;
+  max-width: 300px;
+  border: 2px solid #f9844a;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #90be6d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 1em;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .tab {
-  display: none;
+  padding: 20px;
 }
 
-.puzzlePiece {
+#doublesGrid span,
+#recherchesGrid span {
   display: inline-block;
   margin: 3px;
-  padding: 10px;
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-.puzzlePiece.checked {
-  background-color: #32cd32;
-  color: white;
-  border-color: #228b22;
-}
-
-img#flag {
-  animation: float 2s ease-in-out infinite;
-  margin-bottom: 10px;
+  padding: 5px;
+  background: #e0f7fa;
+  border-radius: 5px;
+  font-size: 0.9em;
 }
